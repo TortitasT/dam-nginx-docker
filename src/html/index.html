@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      :root {
+        --bg-color: #121212;
+        --fg-color: #fff;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+
+        background-color: var(--bg-color);
+        color: var(--fg-color);
+        font-family: sans-serif;
+
+        font-size: clamp(0.5rem, 2vw, 1rem);
+      }
+
+      .page--wip {
+        text-align: center;
+
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .page--wip h1 {
+        font-size: 4em;
+      }
+      .page--wip p {
+        font-size: 2em;
+      }
+      .page--wip__text{
+        display: flex;
+      }
+
+      .cursor {
+        display: inline-block;
+
+        width: 1em;
+        height: 100%;
+        background-color: var(--fg-color);
+
+        margin-left: 0.25em;
+      }
+
+      .cursor--blink {
+        animation: cursor-blink 1s infinite;
+      }
+
+      @keyframes cursor-blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page--wip">
+      <h1><span>⚠️</span>Próximamente la web del hotel</h1>
+      
+      <div class="page--wip__text">
+        <p class="typewritter">Vuelve pronto...</p>
+        <span class="cursor">
+      </div>
+    </main>
+  </body>
+
+  <script>
+    function typeWritter(element, text, delay = 100) {
+      element.textContent = "";
+
+      const letters = text.split("");
+      let i = 0;
+
+      const interval = setInterval(() => {
+        element.textContent += letters[i];
+        i++;
+
+        if (i > letters.length - 1) {
+          clearInterval(interval);
+
+          document.querySelector(".cursor").classList.add("cursor--blink");
+        }
+      }, delay);
+    }
+
+    const typewritter = document.querySelector(".typewritter");
+
+    typeWritter(typewritter, typewritter.textContent);
+  </script>
+</html>
