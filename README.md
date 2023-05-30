@@ -7,13 +7,13 @@ Made for DAM1 Sistemas Operativos. It should bootstrap a sample nginx server wit
 To bootstrap and start the server.
 
 ```bash
-docker compose up -d
+make up
 ```
 
 To shutdown the server.
 
 ```bash
-docker compose down --remove-orphans
+make down
 ```
 
 To enable mantainence mode create a file `503.flag` on the document root.
