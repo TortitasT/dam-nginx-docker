@@ -1,6 +1,8 @@
 # DAM nginx Docker
 
-Made for DAM1 Sistemas Operativos. It should bootstrap a sample nginx server with 503 mantainence flag support.
+Made for DAM1 Sistemas Operativos. It should bootstrap a sample nginx server with 503 mantainence flag support. When more than 1 user is connected it should put itself in mantainance.
+
+DISCLAIMER: Just a demo :)
 
 ## Usage
 
