@@ -1,5 +1,5 @@
 ---
-title: Documento de diseño - Practica final DAM1 Sistemas Operativos
+title: Documento técnico - Practica final DAM1 Sistemas Operativos
 author:
   - Asier Gilaber Garcelan
   - Jose Manuel Carrasco

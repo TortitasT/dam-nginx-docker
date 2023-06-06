@@ -7,4 +7,4 @@ down:
 	docker compose down --remove-orphans
 
 docs:
-	pandoc -s -o docs/design_document.pdf docs/design_document.doc.md --resource-path=docs --toc
+	pandoc -s -o docs/paper.pdf docs/paper.doc.md --resource-path=docs --toc
