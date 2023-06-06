@@ -16,7 +16,7 @@ To shutdown the server.
 make down
 ```
 
-To enable mantainence mode create a file `503.flag` on the document root.
+To enable mantainence mode create a file `503.flag` on the document root `/usr/share/nginx/html`.
 
 ```
 touch 503.flag
