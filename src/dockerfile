@@ -13,7 +13,8 @@ RUN sed -i 's/\r$//' /scripts/*.sh # Fix for windows line end >:(
 RUN chmod +x /scripts/*.sh
 
 RUN crontab -l | { cat; echo "* * * * * bash /scripts/htop_html.sh"; } | crontab -
-RUN crontab -l | { cat; echo "0 0 * * * bash /scripts/backup.sh"; } | crontab -
+RUN crontab -l | { cat; echo "0 0 * * 1 bash /scripts/backup.sh"; } | crontab -
+RUN crontab -l | { cat; echo "*/5 * * * * bash /scripts/check_nginx_saturation.sh"; } | crontab -
 
 EXPOSE 80
 

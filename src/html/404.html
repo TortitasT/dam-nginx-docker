@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ups...</title>
+    <style>
+      :root {
+        --bg-color: #121212;
+        --fg-color: #fff;
+        --font: sans-serif;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      a {
+        color: var(--fg-color);
+        text-decoration: none;
+        font-family: var(--font);
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+
+        background-color: var(--bg-color);
+        color: var(--fg-color);
+        font-family: var(--font);
+
+        font-size: clamp(0.5rem, 2vw, 1rem);
+      }
+
+      .page--wip {
+        text-align: center;
+
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .page--wip h1 {
+        font-size: 4em;
+      }
+      .page--wip p, .page--wip a {
+        font-size: 2em;
+      }
+      .page--wip__text{
+        display: flex;
+      }
+
+      .cursor {
+        display: inline-block;
+
+        width: 1em;
+        height: 100%;
+        background-color: var(--fg-color);
+
+        margin-left: 0.25em;
+      }
+
+      .cursor--blink {
+        animation: cursor-blink 1s infinite;
+      }
+
+      @keyframes cursor-blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page--wip">
+      <h1><span>❓</span>404 ¿Donde vas?</h1>
+      
+      <div class="page--wip__text">
+        <a href="/" class="typewritter">¿Volver al inicio?</a>
+        <span class="cursor">
+      </div>
+    </main>
+  </body>
+
+  <script>
+    function typeWritter(element, text, delay = 100) {
+      element.textContent = "";
+
+      const letters = text.split("");
+      let i = 0;
+
+      const interval = setInterval(() => {
+        element.textContent += letters[i];
+        i++;
+
+        if (i > letters.length - 1) {
+          clearInterval(interval);
+
+          document.querySelector(".cursor").classList.add("cursor--blink");
+        }
+      }, delay);
+    }
+
+    const typewritter = document.querySelector(".typewritter");
+
+    typeWritter(typewritter, typewritter.textContent);
+  </script>
+</html>

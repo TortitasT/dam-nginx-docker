@@ -30,7 +30,17 @@ Disponemos de un fichero `@/makefile`. En este se encuentran 3 apartados:
 
 Para ejecutar cualquier apartado se usa el comando `make nombre_apartado`\footnote{Requiere el paquete make, y pandoc en caso del apartado docs}
 
-## Desarrollo
+## Funcionalidades
+
+- 503 Se detecta cuando hay mas de 1 usuario conectado y se devuelven 503.
+
+- htop.html El administrador puede monitorizar los procesos del contenedor desde el navegador desde la ruta /htop.html protegida por el usuario `admin` con contraseña `secret`.
+
+- backups Se guarda un backup de la carpeta `/usr/share/nginx/html` cada lunes a las 00:00 en el volumen de Docker `backup`.
+
+- 504.flag Si el administrador creara un archivo `503.flag` en la ruta `/usr/share/nginx/html` el servidor devolvería 503. De esta forma se pondría en mantenimiento de forma manual.
+
+## Explicación de los ficheros mas importantes
 
 El fichero principal de este proyecto es `@/src/dockerfile` donde se declaran los comandos a ejecutar para crear la imagen que va a arrancar la maquina, entre otras cosas.
 
@@ -50,11 +60,15 @@ Creamos un fichero de autenticación de apache en la ruta `/etc/nginx/.htpasswd`
 
 Lo siguiente es copiar todos los scripts de `@/src/scripts` a `/scripts` y darles permiso de ejecución.
 
-Ahora añadimos un par de tareas cron. La primera ejecuta el script `/scripts/htop_html.sh` cada minuto. La segunda ejecuta el script `/scripts/backup.sh` todos los días a las 00:00.
+Ahora añadimos tres tareas cron. La primera ejecuta el script `/scripts/htop_html.sh` cada minuto. La segunda ejecuta el script `/scripts/backup.sh` todos los lunes a las 00:00. Y la ultima ejecuta el script `/scripts/check_nginx_saturation` cada 5 minutos.
 
 `EXPOSE 80` le dice a la imagen que exponga el puerto 80 para poder conectarnos desde la maquina anfitriona.
 
 Lo ultimo es un "hack" para ejecutar cron y nginx a la vez en un mismo contenedor. Esto se tiene que hacer porque los contenedores no están diseñados para esta arquitectura. Imagino que la solución seria hacer otro container que haga las copias y ejecutarlo en el cron del anfitrión.
+
+### `@/docker-compose.yml`
+
+En este fichero se encuentra la configuración a ejecutar cuando hagamos `make up`. Lo importante es que se declara el volumen `backup` de forma que se monte en `/media/backup` para poder hacer las copias.
 
 ### `@/src/nginx/default.conf`
 
@@ -64,15 +78,15 @@ Primero declaramos un servidor que escucha en el puerto 80.
 
 Luego le decimos que escriba los accesos en el fichero `/var/log/nginx/host.access.log`.
 
-La primera `location` nos dice que si entramos al servidor por / comprobara si existe el fichero `/usr/share/nginx/html/503.flag` y si no existe nos devolverá el archivo que hemos pedido en la ruta `/usr/share/nginx/html`.
+La primera `location` nos dice que si entramos al servidor por / comprobara si existe el fichero `/usr/share/nginx/html/503.flag` o `/tmp/nginx_saturation` y si no ninguno nos devolverá el archivo que hemos pedido en la ruta `/usr/share/nginx/html`.
 
-Si el archivo existe nos devolverá un 503.
+Si alguno de los archivos existen nos devolverá un 503.
 
 La siguientes instrucciones `error_page` y `location` nos dicen que si el servidor retornara un 503 retornaría el archivo `503.html`.
 
 A continuación hay una `location` protegida por el usuario y contraseña almacenado en `/etc/nginx/.htpasswd` que sirve el fichero `htop.html`.
 
-La siguiente regla nos devuelve las estadísticas del nginx de la siguiente forma al entrar en `/nginx_status`. Esta protegido por la contraseña usada anteriormente.
+La siguiente regla nos devuelve las estadísticas del nginx de la siguiente forma al entrar en `/nginx_status`.
 
 ```
 Active connections: 1
@@ -81,7 +95,9 @@ server accepts handled requests
 Reading: 0 Writing: 1 Waiting: 0
 ```
 
-El resto del archivo nos dice que si el servidor devolviera alguno de esos errores mostraría la pagina `50x.html`.
+Solo puede acceder localhost, esto es usado para saber en numero de usuarios conectados por el script `@/src/scripts/check_nginx_saturation.sh`.
+
+El resto del archivo nos dice que si el servidor devolviera alguno de esos errores mostraría la pagina `50x.html` o `404.html` en caso del 404. También se deniega el acceso a todos los archivos que empiecen por `.ht` pues si los hubiera contendrían información sensible sobre la configuración del servidor web.
 
 ### `@/src/scripts/backup.sh`
 
@@ -90,3 +106,7 @@ Este script ejecuta un backup de la carpeta `/usr/share/nginx/html` como un `.ta
 ### `@/src/scripts/htop_html.sh`
 
 Este script genera un html con la salida estándar del comando htop en la ruta `/usr/share/nginx/html/htop.html`.
+
+### `@/src/scripts/check_nginx_saturation.sh`
+
+Este script comprueba mediante el `location` `/nginx_status` los usuarios conectados y si hay mas de 1\footnote{Para que se pueda testear} pone el servicio en mantenimiento creando un archivo `/tmp/nginx_saturation`.
