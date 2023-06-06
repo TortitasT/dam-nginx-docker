@@ -9,17 +9,17 @@ date: \today
 
 ## Introducción
 
-El proyecto ha sido realizado con Docker. De esta forma podemos declarar una maquina con unas características y replicarla como queramos.
+El proyecto ha sido realizado con Docker. De esta forma podemos declarar una máquina con unas características y replicarla como queramos.
 
 Código en el repositorio git [https://github.com/TortitasT/dam-nginx-docker.git](https://github.com/TortitasT/dam-nginx-docker.git)
 
 Para el servidor web se ha usado nginx.
 
-Se ha usado [nginx](https://hub.docker.com/_/nginx) como la imagen base para la maquina, se trata de un Alpine Linux con nginx instalado.
+Se ha usado [nginx](https://hub.docker.com/_/nginx) como la imagen base para la máquina, se trata de un Alpine Linux con nginx instalado.
 
 ### Directorios
 
-En el directorio `@/src`\footnote{@ hace referencia a la raíz del proyecto} se encuentran los archivos de código fuente de la maquina.
+En el directorio `@/src`\footnote{@ hace referencia a la raíz del proyecto} se encuentran los archivos de código fuente de la máquina.
 
 En el directorio `@/docs` se encuentra el código fuente de la documentación.
 
@@ -27,9 +27,9 @@ En el directorio `@/docs` se encuentra el código fuente de la documentación.
 
 Disponemos de un fichero `@/makefile`. En este se encuentran 3 apartados:
 
-- up Ejecuta los comandos necesarios para poner la maquina en marcha.
+- up Ejecuta los comandos necesarios para poner la máquina en marcha.
 
-- down Ejecuta los comandos necesarios para destruir la maquina.\footnote{Persistiendo los backups en un volumen de Docker}
+- down Ejecuta los comandos necesarios para destruir la máquina.\footnote{Persistiendo los backups en un volumen de Docker}
 
 - docs Ejecuta los comandos necesarios para compilar esta documentación.
 
@@ -45,19 +45,19 @@ Para ejecutar cualquier apartado se usa el comando `make nombre_apartado`\footno
 
 - 504.flag Si el administrador creara un archivo `503.flag` en la ruta `/usr/share/nginx/html` el servidor devolvería 503. De esta forma se pondría en mantenimiento de forma manual.
 
-## Explicación de los ficheros mas importantes
+## Explicación de los ficheros más importantes
 
-El fichero principal de este proyecto es `@/src/dockerfile` donde se declaran los comandos a ejecutar para crear la imagen que va a arrancar la maquina, entre otras cosas.
+El fichero principal de este proyecto es `@/src/dockerfile` donde se declaran los comandos a ejecutar para crear la imagen que va a arrancar la máquina, entre otras cosas.
 
 ### `@/src/dockerfile`
 
 Con `FROM nginx` usamos la imagen de nginx en el registro de Docker como base para nuestra nueva imagen.
 
-Lo siguiente que hacemos es ejecutar apt-get e instalar los paquetes que vamos a necesitar en la maquina.
+Lo siguiente que hacemos es ejecutar apt-get e instalar los paquetes que vamos a necesitar en la máquina.
 
 Con `WORKDIR /usr/share/nginx/html` establecemos la raíz de las siguientes operaciones al directorio donde nginx sirve ficheros por defecto.
 
-Copiamos el directorio `@/src/html` del proyecto al directorio que hemos establecido como WORKDIR dentro de la maquina con `COPY`.
+Copiamos el directorio `@/src/html` del proyecto al directorio que hemos establecido como WORKDIR dentro de la máquina con `COPY`.
 
 Hacemos lo mismo con el fichero `@/src/nginx/default.conf` a su ruta `/etc/nginx/conf.d/default.conf`, este es el fichero de configuración del nginx.
 
@@ -65,11 +65,11 @@ Creamos un fichero de autenticación de apache en la ruta `/etc/nginx/.htpasswd`
 
 Lo siguiente es copiar todos los scripts de `@/src/scripts` a `/scripts` y darles permiso de ejecución.
 
-Ahora añadimos tres tareas cron. La primera ejecuta el script `/scripts/htop_html.sh` cada minuto. La segunda ejecuta el script `/scripts/backup.sh` todos los lunes a las 00:00. Y la ultima ejecuta el script `/scripts/check_nginx_saturation` cada 5 minutos.
+Ahora añadimos tres tareas cron. La primera ejecuta el script `/scripts/htop_html.sh` cada minuto. La segunda ejecuta el script `/scripts/backup.sh` todos los lunes a las 00:00. Y la última ejecuta el script `/scripts/check_nginx_saturation` cada 5 minutos.
 
-`EXPOSE 80` le dice a la imagen que exponga el puerto 80 para poder conectarnos desde la maquina anfitriona.
+`EXPOSE 80` le dice a la imagen que exponga el puerto 80 para poder conectarnos desde la máquina anfitriona.
 
-Lo ultimo es un "hack" para ejecutar cron y nginx a la vez en un mismo contenedor. Esto se tiene que hacer porque los contenedores no están diseñados para esta arquitectura. Imagino que la solución seria hacer otro container que haga las copias y ejecutarlo en el cron del anfitrión.
+Lo último es un "hack" para ejecutar cron y nginx a la vez en un mismo contenedor. Esto se tiene que hacer porque los contenedores no están diseñados para esta arquitectura. Imagino que la solución sería hacer otro container que haga las copias y ejecutarlo en el cron del anfitrión.
 
 ### `@/docker-compose.yml`
 
@@ -114,4 +114,4 @@ Este script genera un html con la salida estándar del comando htop en la ruta `
 
 ### `@/src/scripts/check_nginx_saturation.sh`
 
-Este script comprueba mediante el `location` `/nginx_status` los usuarios conectados y si hay mas de 1\footnote{Para que se pueda testear} pone el servicio en mantenimiento creando un archivo `/tmp/nginx_saturation`.
+Este script comprueba mediante el `location` `/nginx_status` los usuarios conectados y si hay más de 1\footnote{Para que se pueda testear} pone el servicio en mantenimiento creando un archivo `/tmp/nginx_saturation`.

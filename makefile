@@ -7,4 +7,4 @@ down:
 	docker compose down --remove-orphans
 
 docs:
-	pandoc -s -o docs/paper.pdf docs/paper.doc.md --resource-path=docs --toc
+	$(foreach file, $(wildcard docs/*.doc.md), pandoc -s -o $(file:.doc.md=.pdf) $(file) --resource-path=docs --toc;)
