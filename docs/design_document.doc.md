@@ -1,12 +1,17 @@
 ---
 title: Documento de diseño - Practica final DAM1 Sistemas Operativos
-author: Víctor García Fernández
+author:
+  - Asier Gilaber Garcelan
+  - Jose Manuel Carrasco
+  - Víctor García Fernández
 date: \today
 ---
 
 ## Introducción
 
 El proyecto ha sido realizado con Docker. De esta forma podemos declarar una maquina con unas características y replicarla como queramos.
+
+Código en el repositorio git [https://github.com/TortitasT/dam-nginx-docker.git](https://github.com/TortitasT/dam-nginx-docker.git)
 
 Para el servidor web se ha usado nginx.
 
