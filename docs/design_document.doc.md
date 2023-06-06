@@ -72,6 +72,15 @@ La siguientes instrucciones `error_page` y `location` nos dicen que si el servid
 
 A continuación hay una `location` protegida por el usuario y contraseña almacenado en `/etc/nginx/.htpasswd` que sirve el fichero `htop.html`.
 
+La siguiente regla nos devuelve las estadísticas del nginx de la siguiente forma al entrar en `/nginx_status`. Esta protegido por la contraseña usada anteriormente.
+
+```
+Active connections: 1
+server accepts handled requests
+ 2 2 6
+Reading: 0 Writing: 1 Waiting: 0
+```
+
 El resto del archivo nos dice que si el servidor devolviera alguno de esos errores mostraría la pagina `50x.html`.
 
 ### `@/src/scripts/backup.sh`
